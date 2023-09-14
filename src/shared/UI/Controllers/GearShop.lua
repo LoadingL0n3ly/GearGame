@@ -22,11 +22,11 @@ end
 
 
 local Colors = {
-    Color3.new(1, 0.070588, 0.070588),
-    Color3.new(1, 0.937254, 0.070588),
-    Color3.new(0.180392, 1, 0.070588),
-    Color3.new(1, 0.070588, 0.952941),
-    Color3.new(0.070588, 0.580392, 1),
+    Melee = Color3.new(1, 0.070588, 0.070588),
+    Ranged = Color3.new(1, 0.937254, 0.070588),
+    Transport = Color3.new(0.180392, 1, 0.070588),
+    Explosive = Color3.new(1, 0.070588, 0.952941),
+    -- Color3.new(0.070588, 0.580392, 1),
 }
 
 local function MakeDarker(color)
@@ -37,23 +37,55 @@ local function MakeDarker(color)
 	return Color3.fromHSV(H, S, V)
 end
 
+local function MakeBrighter(color)
+	local H, S, V = color:ToHSV()
+	
+	V = math.clamp(V + 0.3, 0, 1)
+	
+	return Color3.fromHSV(H, S, V)
+end
+
+
 function class.Setup()
     ScreenGUI = GUI:WaitForChild(script.Name)
-
+    
     Base = ScreenGUI:FindFirstChild("Base")
-    ScrollingFrame = Base:FindFirstChildWhichIsA("ScrollingFrame")
-    ListLayout = ScrollingFrame:FindFirstChildWhichIsA("UIListLayout")
+
+    local SelectedButton = Base:FindFirstChild("Buttons"):FindFirstChild("Ranged")
+    SelectedButton.BackgroundColor3 = MakeDarker(SelectedButton.BackgroundColor3)
+
+    -- ScrollingFrame = Base:FindFirstChildWhichIsA("ScrollingFrame")
+    -- ListLayout = ScrollingFrame:FindFirstChildWhichIsA("UIListLayout")
     TitleBox = Base:FindFirstChild("Title")
 
-    local Sample: Frame = ScrollingFrame:FindFirstChild("Sample")
+    local Sample: Frame = Base:FindFirstChild("Sample")
 
     local GearData = ShopDB.Gears
     local Index = 1
 
+    for _, Button: ImageButton in Base:FindFirstChild("Buttons"):GetChildren() do
+        if not Button:IsA("ImageButton") then continue end
+
+        local TargetFrame = Base:FindFirstChild(Button.Name) if not TargetFrame then continue end
+        if not TargetFrame:IsA("ScrollingFrame") then continue end
+
+        Button.MouseButton1Down:Connect(function(x, y)
+            if Button == SelectedButton then return end
+
+            SelectedButton.BackgroundColor3 = MakeBrighter(SelectedButton.BackgroundColor3)
+            Base:FindFirstChild(SelectedButton.Name).Visible = false
+
+            SelectedButton = Button
+            SelectedButton.BackgroundColor3 = MakeDarker(SelectedButton.BackgroundColor3)
+            TargetFrame.Visible = true
+        end)
+    end
+
     for ID, DataObj in GearData do
         local GearObject = Base:FindFirstChild("Sample"):Clone()
-        
-        local Color = Colors[Index]
+        local ScrollingFrame = Base:FindFirstChild(DataObj.Category) if not ScrollingFrame then warn(DataObj.Category) continue end
+
+        local Color = Colors[DataObj.Category]
         
         GearObject.Name = ID
         GearObject.UIStroke.Color = Color
