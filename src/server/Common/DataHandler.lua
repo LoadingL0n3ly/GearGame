@@ -3,7 +3,9 @@ local DataHandler = {}
 
 local ProfileTemplate = {
 	Points = 0,
-	PermanentGears = {}
+	PermanentGears = {
+		125013769,
+	}
 }
 
 local ProfileService = require(game.ServerScriptService.Utils.ProfileService)
@@ -12,11 +14,11 @@ local Players = game:GetService("Players")
 local ProfileStore = ProfileService.GetProfileStore("Dev_" .. _G.GameVersion, ProfileTemplate)
 
 local Common = game.ServerScriptService.Common
-local Shared = game.ReplicatedStorage.Common
+local Shared = game.ReplicatedStorage.Shared
 
 -- // MODULES
-local StageHandler = require(Common.StageHandler)
-local WinsHandler = require(Common.WinsHandler)
+local PointHandler = require(Common.PointHandler)
+local GearHandler = require(Common.GearHandler)
 
 
 local Profiles = {}
@@ -24,14 +26,17 @@ local DataHandler = {}
 
 local function FirstJoin(player)
 	print("First time joining, welcome!")
-end
+end 
 
 local function InitiateStats(player, profile)
+	local Data = profile.Data
+	GearHandler.LoadData(player, Data.PermanentGears)
+	
 	local leaderstats = Instance.new("Folder")
 	leaderstats.Name = "leaderstats"
 	leaderstats.Parent = player
 
-	
+	PointHandler.LoadData(player, Data.Points)
 end
 
 local function PlayerAdded(player)
@@ -58,7 +63,8 @@ local function PlayerAdded(player)
 end
 
 local function SaveData(player, profile)
-	
+	profile.Data.Points = PointHandler.FetchData(player)
+	profile.Data.PermanentGears = GearHandler.FetchData(player, true)
 end
 
 for _, player in ipairs(Players:GetPlayers()) do

@@ -1,5 +1,5 @@
 local timeStart = tick()
-_G.GameVersion = 0.17
+_G.GameVersion = 0.03
 
 -- // SERVICES
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -13,6 +13,7 @@ local Remotes = game.ReplicatedStorage.Remotes
 
 -- // MODULES
 local DataHandler = require(Common.DataHandler)
+local GearHandler = require(Common.GearHandler)
 
 -- // REMOTE EVENTS
 
@@ -29,7 +30,7 @@ local PlayerConnections = {}
 -- // FUNCTIONS
 local function CharacterAdded(char)
 	local Player = Players:GetPlayerFromCharacter(char) if not Player then return end
-
+    GearHandler.CharAdded(char)
 end
 
 local function CharacterRemoving(char) 

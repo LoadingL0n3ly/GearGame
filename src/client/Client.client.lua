@@ -15,6 +15,8 @@ workspace.ChildAdded:Connect(function(child: BasePart)
     
 end)
 
+
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local timeStart = tick()
 
@@ -30,6 +32,10 @@ local Remotes = ReplicatedStorage:WaitForChild("Remotes")
 local UI = require(ReplicatedStorage.UI)
 
 -- // SETUP
+if not game:IsLoaded() then
+	game.Loaded:Wait()
+end
+
 UI.Setup()
 
 
@@ -39,7 +45,7 @@ Player.CharacterAdded:Connect(function(character)
 end)
 
 RunService.RenderStepped:Connect(function(deltaTime)
-   
+   UI.RenderStepped()
 end)
 
 

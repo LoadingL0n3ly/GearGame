@@ -1,0 +1,20 @@
+local class = {}
+
+local Player = game.Players.LocalPlayer
+local GUI = Player.PlayerGui
+
+local ScreenGUI = "Blank"
+
+function class.OnOpen()
+    print("Opening " .. ScreenGUI.Name)
+end
+
+function class.OnClose()
+    print("Closing " .. ScreenGUI.Name)
+end
+
+function class.Setup()
+    ScreenGUI = GUI:WaitForChild(script.Name)
+end
+
+return class
