@@ -1,6 +1,9 @@
 local class = {}
 
 local MarketPlaceService = game:GetService("MarketplaceService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Gears = ReplicatedStorage:FindFirstChild("Gears")
 
 class.Gears = {
     [243790334] = {
@@ -45,6 +48,30 @@ class.Gears = {
         PermanentPurchaseProduct = false, 
     },
 
+    [01010] = {
+        Name = "RPG", 
+        Desc = "Explode your friends at a distance, awesome!",
+        Category = "Ranged",
+        PurchaseCost = 100, -- IN POINTS
+        PermanentPurchaseProduct = false, 
+    },
+
 }
+
+
+
+
+function class.GetTool(ID)
+   local SelectedItem = nil
+
+   for _, Gear in Gears:GetChildren() do
+        if Gear:GetAttribute("GearID") == ID then
+            SelectedItem = Gear
+            continue
+        end
+   end
+
+   return SelectedItem:Clone() or "Unable to find gear " .. ID
+end
 
 return class

@@ -7,10 +7,17 @@ local ScreenGUI = "Blank"
 local Base,TitleBox, ScrollingFrame, ListLayout = nil
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local SFX = ReplicatedStorage:FindFirstChild("SFX")
 local MarketPlaceService = game:GetService("MarketplaceService")
 local Database = ReplicatedStorage:WaitForChild("Database")
 
 local ShopDB = require(Database:FindFirstChild("GearShop"))
+
+local Remotes = ReplicatedStorage:FindFirstChild("Remotes")
+local GearShopRemotes = Remotes:FindFirstChild("GearShopRemotes")
+
+-- Remotes:
+local PurchaseGearEvent: RemoteFunction = GearShopRemotes:FindFirstChild("PurchaseGear")
 
 function class.OnOpen()
    
@@ -43,6 +50,22 @@ local function MakeBrighter(color)
 	V = math.clamp(V + 0.3, 0, 1)
 	
 	return Color3.fromHSV(H, S, V)
+end
+
+local function PointPurchaseGear(Button: ImageButton, ID: number)
+    local Response = PurchaseGearEvent:InvokeServer(ID)
+
+    if Response.Success then
+        SFX:FindFirstChild("PurchaseComplete"):Play()
+    end
+
+    local Label = Button:FindFirstChildWhichIsA("TextLabel")
+    local PrevText = Label.Text
+    Label.Text = Response.Msg
+
+    task.delay(1, function()
+        Label.Text = PrevText
+    end)
 end
 
 
@@ -100,7 +123,7 @@ function class.Setup()
         GearObject.Buy.TextLabel.Text = "Buy: " .. DataObj.PurchaseCost .. "PTs"
         GearObject.LayoutOrder = DataObj.PurchaseCost
         GearObject.Buy.MouseButton1Down:Connect(function()
-            print("Buy Gear!")
+            PointPurchaseGear(GearObject.Buy, ID)
         end)
 
         if DataObj.PermanentPurchaseProduct then

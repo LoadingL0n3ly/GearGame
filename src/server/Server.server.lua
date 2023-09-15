@@ -14,12 +14,15 @@ local Remotes = game.ReplicatedStorage.Remotes
 -- // MODULES
 local DataHandler = require(Common.DataHandler)
 local GearHandler = require(Common.GearHandler)
+local PointHandler = require(Common.PointHandler)
 
 -- // REMOTE EVENTS
 
 -- // WORLD SETUP
 
 -- // SETUP
+GearHandler.Setup()
+
 
 -- // TABLES
 local PlayerConnections = {}
@@ -63,7 +66,7 @@ Players.PlayerRemoving:Connect(function(player)
 end)
 
 RunService.Stepped:Connect(function(time, deltaTime)
-
+	PointHandler.Stepped()
 end)
 
 print("🏁 Loaded Server v." .. _G.GameVersion .. " in " .. math.floor((tick() - timeStart) * 1000) .. " ms")
