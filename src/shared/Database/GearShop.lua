@@ -24,13 +24,13 @@ class.Gears = {
     },
 
     
-    [11377306] = {
-        Name = "Ninja Star", 
-        Desc = "Throw this at your friends, awesome!",
-        Category = "Ranged",
-        PurchaseCost = 60, -- IN POINTS
-        PermanentPurchaseProduct = false, 
-    },
+    -- [11377306] = {
+    --     Name = "Ninja Star", 
+    --     Desc = "Throw this at your friends, awesome!",
+    --     Category = "Ranged",
+    --     PurchaseCost = 60, -- IN POINTS
+    --     PermanentPurchaseProduct = false, 
+    -- },
 
     [225921000] = {
         Name = "Magic Carpet", 
