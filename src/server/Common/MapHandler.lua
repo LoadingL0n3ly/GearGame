@@ -1,11 +1,13 @@
 local class = {}
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 
 local RESET_TIME = 5 * 60
 local LastReset = os.time()
 
 local Time = require(ReplicatedStorage:WaitForChild("Utils"):FindFirstChild("Time"))
+local KillLeaderBoardHandler = require(ServerScriptService.Common.KillLeaderBoardHandler)
 
 
 local MapBackup = workspace:WaitForChild("Map"):Clone()
@@ -42,6 +44,7 @@ function class.Tick()
 
     if TimeRemaining <= 0 then
         ResetMap()
+        task.delay(2, KillLeaderBoardHandler.UpdateLeaderBoard)
     end
 end        
 

@@ -12,7 +12,7 @@ local function RetrieveTopHundred()
     for rank, data in ipairs(topHundred) do
 		local name = data.key
 		local points = data.value
-		print(name .. " is ranked #" .. rank .. " with " .. points .. " kills")
+		-- print(name .. " is ranked #" .. rank .. " with " .. points .. " kills")
 	end
 
     return topHundred
@@ -24,7 +24,9 @@ end
 
 local function UpdateAllPlayers()
     for _, player in game.Players:GetPlayers() do
-        local leaderstats = player:FindFirstChild("leaderstats") if not leaderstats then continue end
+        local leaderstats = player:FindFirstChild("leaderstats") 
+        if not leaderstats then continue end
+        
         local Kills = leaderstats:FindFirstChild("Kills")
 
         class.UpdatePlayerKills(player, Kills.Value)
@@ -32,8 +34,8 @@ local function UpdateAllPlayers()
 end
 
 function class.UpdateLeaderBoard()
-    local Leaderboard = workspace:FindFirstChild("Map"):FindFirstChild("KillLeaderboard")
-    local UI = Leaderboard:FindFirstChildWhichIsA("SurfaceGui")
+    local Leaderboard = workspace:WaitForChild("Map"):WaitForChild("KillLeaderboard")
+    local UI = Leaderboard.Screen:WaitForChild("SurfaceGui")
 
     local Sample = UI:FindFirstChild("Sample")
     UpdateAllPlayers()
@@ -44,7 +46,13 @@ function class.UpdateLeaderBoard()
 		local points = data.value
 		
         local leaderboardObj = Sample:Clone()
-        leaderboardObj.
+        leaderboardObj.Place.Text = rank .. ": " .. name
+        leaderboardObj.Amount.Text = points
+
+        leaderboardObj.Name = name
+        leaderboardObj.Visible = true
+        leaderboardObj.LayoutOrder = rank
+        leaderboardObj.Parent = UI:FindFirstChild("ScrollingFrame")
 	end
 
 end

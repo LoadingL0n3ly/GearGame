@@ -76,7 +76,6 @@ local function SaveData(player, profile)
 	profile.Data.Points = PointHandler.FetchData(player)
 	profile.Data.Kills = player.leaderstats.Kills.Value
 	KillLeaderboardHandler.UpdatePlayerKills(player, player.leaderstats.Kills.Value)
-	local topKills = KillLeaderboardHandler.RetrieveTopHundred()
 	profile.Data.PermanentGears = GearHandler.FetchData(player, true)
 end
 

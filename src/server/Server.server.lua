@@ -18,6 +18,7 @@ local PointHandler = require(Common.PointHandler)
 local DeathHandler = require(Shared.DeathHandler)
 local ChatHandler = require(Common.ChatHandler)
 local MapHandler = require(Common.MapHandler)
+local KillLeaderBoardHandler = require(Common.KillLeaderBoardHandler)
 
 -- // REMOTE EVENTS
 
@@ -25,6 +26,7 @@ local MapHandler = require(Common.MapHandler)
 
 -- // SETUP
 GearHandler.Setup()
+KillLeaderBoardHandler.UpdateLeaderBoard()
 
 
 -- // TABLES
@@ -58,6 +60,9 @@ local function PlayerAdded(player: Player)
 	PlayerConnections[player] = {}
 
 	PlayerConnections[player]["CharAdded"] = player.CharacterAdded:Connect(CharacterAdded)
+	if player.Character then
+		task.spawn(CharacterAdded, player.Character)
+	end
 	PlayerConnections[player]["CharRemoving"] = player.CharacterRemoving:Connect(CharacterRemoving)
 end
 
@@ -72,7 +77,9 @@ Players.PlayerRemoving:Connect(function(player)
 	ChatHandler.playerLeft(player.Name)
 	
 	-- Clear Connections
-	local Connections = PlayerConnections[player] if not Connections then return end
+	local Connections = PlayerConnections[player] 
+	if not Connections then return end
+
 	for index, connection in Connections do
 		connection:Disconnect()
 	end
