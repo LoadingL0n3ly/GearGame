@@ -19,7 +19,7 @@ local function RetrieveTopHundred()
 end
 
 function class.UpdatePlayerKills(player: Player, kills: number)
-    KillLeaderboardStore:SetAsync(player.Name, kills)
+    KillLeaderboardStore:UpdateAsync(player.Name, kills)
 end
 
 local function UpdateAllPlayers()
