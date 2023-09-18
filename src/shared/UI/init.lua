@@ -12,6 +12,7 @@ local RunService = game:GetService("RunService")
 local ControllersFolder = script:WaitForChild("Controllers")
 
 -- Modules 
+local GainController = require(script:FindFirstChild("GainController"))
 
 local ActivatedElements = {}
 
@@ -188,6 +189,10 @@ function class.Setup()
         local Controller = require(ModuleScript)
         Controller.Setup()
     end
+
+
+    -- MODULE SETUP
+    GainController.Setup()
 
     print("🎨 UI Setup")
 end

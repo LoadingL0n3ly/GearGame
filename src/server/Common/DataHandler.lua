@@ -3,6 +3,7 @@ local DataHandler = {}
 
 local ProfileTemplate = {
 	Points = 0,
+	Kills = 0,
 	PermanentGears = {
 		125013769,
 	}
@@ -10,8 +11,11 @@ local ProfileTemplate = {
 
 local ProfileService = require(game.ServerScriptService.Utils.ProfileService)
 local BadgeService = game:GetService("BadgeService")
+local DataStoreService = game:GetService("DataStoreService")
 local Players = game:GetService("Players")
 local ProfileStore = ProfileService.GetProfileStore("Dev_" .. _G.GameVersion, ProfileTemplate)
+
+
 
 local Common = game.ServerScriptService.Common
 local Shared = game.ReplicatedStorage.Shared
@@ -19,6 +23,7 @@ local Shared = game.ReplicatedStorage.Shared
 -- // MODULES
 local PointHandler = require(Common.PointHandler)
 local GearHandler = require(Common.GearHandler)
+local KillLeaderboardHandler = require(Common.KillLeaderBoardHandler)
 
 
 local Profiles = {}
@@ -35,6 +40,11 @@ local function InitiateStats(player, profile)
 	local leaderstats = Instance.new("Folder")
 	leaderstats.Name = "leaderstats"
 	leaderstats.Parent = player
+
+	local KillsValue = Instance.new("IntValue")
+	KillsValue.Name = "Kills"
+	KillsValue.Value = Data.Kills
+	KillsValue.Parent = leaderstats
 
 	PointHandler.LoadData(player, Data.Points)
 end
@@ -64,6 +74,9 @@ end
 
 local function SaveData(player, profile)
 	profile.Data.Points = PointHandler.FetchData(player)
+	profile.Data.Kills = player.leaderstats.Kills.Value
+	KillLeaderboardHandler.UpdatePlayerKills(player, player.leaderstats.Kills.Value)
+	local topKills = KillLeaderboardHandler.RetrieveTopHundred()
 	profile.Data.PermanentGears = GearHandler.FetchData(player, true)
 end
 

@@ -18,6 +18,7 @@ end)
 
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TextChatService = game:GetService("TextChatService")
 local timeStart = tick()
 
 local Player = game.Players.LocalPlayer
@@ -30,6 +31,9 @@ local Remotes = ReplicatedStorage:WaitForChild("Remotes")
 
 -- // MODULES
 local UI = require(ReplicatedStorage.UI)
+local DeathHandler = require(Common.DeathHandler)
+local FallDamageHandler = require(Common.FallDamageHandler)
+local ChatHandler = require(Common.ChatClient)
 
 -- // SETUP
 if not game:IsLoaded() then
@@ -38,10 +42,19 @@ end
 
 UI.Setup()
 
+-- // FUNCTIONS
+local function CharacterAdded(character)
+    FallDamageHandler.CharAdded(character)
+end
 
 -- // CONNECTIONS
-Player.CharacterAdded:Connect(function(character)
-    
+TextChatService.OnIncomingMessage = ChatHandler.OnIncomingMessage
+
+if Player.Character then CharacterAdded(Player.Character) end
+Player.CharacterAdded:Connect(CharacterAdded)
+
+Player.CharacterRemoving:Connect(function(character)
+      
 end)
 
 RunService.RenderStepped:Connect(function(deltaTime)

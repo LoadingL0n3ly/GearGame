@@ -1,8 +1,8 @@
 local class = {}
 
 -- CONSTANTS
-local FREE_POINT_TIME = 2 -- SECONDS
-local FREE_POINTS = 20 -- POINTS TO GIVE
+local FREE_POINT_TIME = 5 -- SECONDS
+local FREE_POINTS = 10 -- POINTS TO GIVE
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -28,14 +28,15 @@ function class.FetchData(player)
     return Points.Value
 end
 
-function class.ModifyPoints(player: Player, amount: number, IGNORE_MULT: boolean, HIDE_NOTIF: boolean)
+function class.ModifyPoints(player: Player, amount: number, IGNORE_MULT: boolean, HIDE_NOTIF: boolean, msg: string)
+    if not msg then msg = "" end
     if amount == 0 then return end
     
     local leaderstats = player:FindFirstChild("leaderstats") if not leaderstats then return 0 end
     local Points = leaderstats:FindFirstChild("Points") if not Points then return end
 
     Points.Value += amount
-    ModifyPoints:FireClient(player, amount, HIDE_NOTIF)
+    ModifyPoints:FireClient(player, amount, HIDE_NOTIF, msg)
 end
 
 local lastAward = os.time()
@@ -43,7 +44,7 @@ local lastAward = os.time()
 function class.Stepped()
     if os.time() - lastAward >= FREE_POINT_TIME then
         for _, player in Players:GetPlayers() do
-            class.ModifyPoints(player, FREE_POINTS, true, false)
+            class.ModifyPoints(player, FREE_POINTS, true, true)
         end
 
         lastAward = os.time()
