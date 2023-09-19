@@ -26,8 +26,8 @@ local function ResetMap()
         end)
     end
 
-    NewMap.Parent = workspace
     OldMap:Destroy()
+    NewMap.Parent = workspace
     LastReset = os.time()
 end
 
