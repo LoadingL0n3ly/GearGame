@@ -18,8 +18,11 @@ local function RetrieveTopHundred()
     return topHundred
 end
 
-function class.UpdatePlayerKills(player: Player, kills: number)
-    KillLeaderboardStore:UpdateAsync(player.Name, kills)
+function class.UpdatePlayerKills(player: Player, Kills: number)
+    KillLeaderboardStore:UpdateAsync(player.Name, function(oldValue)
+        if Kills < oldValue then return warn(player.Name .. " had " .. oldValue .. " kills but now only has " .. Kills) end
+        return Kills
+    end)
 end
 
 local function UpdateAllPlayers()

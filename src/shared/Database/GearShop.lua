@@ -21,6 +21,20 @@ class.Gears = {
         end,
     },
 
+    [16688968] = {
+        Name = "Gravity Coil", 
+        Desc = "Jump, but higher!",
+        Category = "Transport",
+        PurchaseCost = 20, -- IN POINTS
+    },
+
+    [78730532] = {
+        Name = "Body Swap Potion", 
+        Desc = "Be your Friends!",
+        Category = "Misc",
+        PurchaseCost = 20, -- IN POINTS
+    },
+
     [95354288] = {
         Name = "Luger Pistol", 
         Desc = "Shoot your friends, awesome!",

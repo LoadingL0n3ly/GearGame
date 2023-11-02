@@ -33,6 +33,7 @@ local Colors = {
     Ranged = Color3.new(1, 0.937254, 0.070588),
     Transport = Color3.new(0.180392, 1, 0.070588),
     Explosive = Color3.new(1, 0.070588, 0.952941),
+    Misc = Color3.fromRGB(14, 183, 255),
     -- Color3.new(0.070588, 0.580392, 1),
 }
 

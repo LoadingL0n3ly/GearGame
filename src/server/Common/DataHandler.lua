@@ -74,8 +74,10 @@ end
 
 local function SaveData(player, profile)
 	profile.Data.Points = PointHandler.FetchData(player)
-	profile.Data.Kills = player.leaderstats.Kills.Value
-	KillLeaderboardHandler.UpdatePlayerKills(player, player.leaderstats.Kills.Value)
+
+	profile.Data.Kills = player.leaderstats.Kills.Value or -5
+	KillLeaderboardHandler.UpdatePlayerKills(player, profile.Data.Kills)
+
 	profile.Data.PermanentGears = GearHandler.FetchData(player, true)
 end
 
