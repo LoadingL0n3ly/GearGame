@@ -57,7 +57,15 @@ function class:PathTo(target: Part)
             Data.reachedConnection = self.Character.Humanoid.MoveToFinished:Connect(function(reached)
                 if reached and Data.nextWaypointIndex < #Data.waypoints then
                     Data.nextWaypointIndex += 1
-                    self.Character.Humanoid:MoveTo(Data.waypoints[Data.nextWaypointIndex].Position)
+                    
+                    local nextWaypoint = Data.waypoints[Data.nextWaypointIndex]
+                    self.Character.Humanoid:MoveTo(nextWaypoint.Position)
+                    
+                    -- Check if the next waypoint requires jumping
+                    if nextWaypoint.Action == Enum.PathWaypointAction.Jump then
+                        print("Jumping!")
+                        self.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+                    end
                 else
                     print("path completed")
                     Data.reachedConnection:Disconnect()
@@ -72,9 +80,11 @@ function class:PathTo(target: Part)
         end
 
         Data.nextWaypointIndex = 2
+        print("Moving!")
         self.Character.Humanoid:MoveTo(Data.waypoints[Data.nextWaypointIndex].Position)
     else
         warn("Path not computed!", errorMessage)
+        self:PathTo()
     end
 end
 
