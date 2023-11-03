@@ -23,12 +23,12 @@ function Swordsman.New(name: string, health: number, StartPos: Vector3)
     self.Target = nil
 
     self.RenderConnection = RunService.Stepped:Connect(function()
-        if self.Target then
-            self:MoveToTarget(self.Target)
-        else
-            self:DefaultWalkCycle() -- defualt walk cycle is a function in NPC
-            self:LookForTarget()
-        end
+        -- if self.Target then
+        --     self:MoveToTarget(self.Target)
+        -- else
+        --     self:DefaultWalkCycle() -- defualt walk cycle is a function in NPC
+        --     self:LookForTarget()
+        -- end
     end)
 
     return self

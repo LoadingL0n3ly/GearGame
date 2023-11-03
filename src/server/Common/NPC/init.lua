@@ -10,18 +10,37 @@ local Storage = Instance.new("Folder")
 Storage.Name = "NPCs"
 Storage.Parent = workspace
 
--- Sample Path
+-- Util
+local SpawnFolder = workspace:WaitForChild("Spawns")
 
+function GetRandomSpawn()
+    return SpawnFolder:GetChildren()[math.random(1, #SpawnFolder:GetChildren())]
+end
 
 -- Pathfinding 
 function class:PathTo(target: Part)
     local Data = self.Pathfinding
-    Data.Target = target
-    Data.Path = PathfindingService:CreatePath()
+    if not Data.Override then 
+        Data.Target = GetRandomSpawn()
+        print(Data.Target)
+    else
+        Data.Target = target
+    end
+
+    Data.Path = PathfindingService:CreatePath(
+        {
+            AgentRadius = 1,
+            AgentHeight = 4,
+            AgentCanJump = true,
+            AgentCanClimb = true,
+            AgentJumpHeight = 10,
+            AgentMaxSlopeAngle = 30,
+        }
+    )
 
     
     local success, errorMessage = pcall(function()
-		Data.Path:ComputeAsync(self.Character.PrimaryPart.Position, target.CFrame.Position)
+		Data.Path:ComputeAsync(self.Character.PrimaryPart.Position, Data.Target.CFrame.Position)
 	end)
 
     if success and Data.Path.Status == Enum.PathStatus.Success then
@@ -30,7 +49,7 @@ function class:PathTo(target: Part)
         Data.blockedConnection = Data.Path.Blocked:Connect(function(blockedWaypointIndex)
             if blockedWaypointIndex >= Data.nextWaypointIndex then
                 Data.blockedConnection:Disconnect()
-                self:PathTo(target)
+                self:PathTo(Data.Target)
             end
         end)
 
@@ -43,6 +62,11 @@ function class:PathTo(target: Part)
                     print("path completed")
                     Data.reachedConnection:Disconnect()
                     Data.blockedConnection:Disconnect()
+
+                    if not Data.Override then
+                        print("Recalculating Path!!!!!")
+                        self:PathTo()
+                    end
                 end
             end)
         end
@@ -68,6 +92,7 @@ function class.New(Name: string, StartPos: Vector3 , Type: string)
 
     -- Pathfinding Stuff
     self.Pathfinding = {
+        Override = false,
         Path = nil,
         Target = nil,
         nextWaypointIndex = nil,
