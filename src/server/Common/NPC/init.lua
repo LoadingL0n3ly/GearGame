@@ -13,15 +13,45 @@ Storage.Parent = workspace
 -- Util
 local SpawnFolder = workspace:WaitForChild("Spawns")
 
+-- Standard Animations
+local Animations = {
+    Climbing = "http://www.roblox.com/asset/?id=10921257536",
+    Jumping = "http://www.roblox.com/asset/?id=10921263860",
+    Freefall = "http://www.roblox.com/asset/?id=10921262864",
+    Running = "http://www.roblox.com/asset/?id=10921269718",
+}
+
 function GetRandomSpawn()
     return SpawnFolder:GetChildren()[math.random(1, #SpawnFolder:GetChildren())]
 end
 
+
 -- Pathfinding 
 function class:PathTo(target: Part)
+    print("Recalculating Path!!!!!")
     local Data = self.Pathfinding
+
+    if Data.reachedConnection then
+        Data.reachedConnection:Disconnect()
+        Data.reachedConnection = nil
+    end
+
+    if Data.blockedConnection then
+        Data.blockedConnection:Disconnect()
+        Data.blockedConnection = nil
+    end
+
+    Data.waypoints = nil
+    Data.Path = nil
+    Data.nextWaypointIndex = nil
+
     if not Data.Override then 
-        Data.Target = GetRandomSpawn()
+        local newTarget = GetRandomSpawn()
+        repeat
+            newTarget = GetRandomSpawn()
+        until newTarget ~= Data.Target
+        
+        Data.Target = newTarget
         print(Data.Target)
     else
         Data.Target = target
@@ -29,12 +59,14 @@ function class:PathTo(target: Part)
 
     Data.Path = PathfindingService:CreatePath(
         {
-            AgentRadius = 1,
+            AgentRadius = 2,
             AgentHeight = 4,
             AgentCanJump = true,
             AgentCanClimb = true,
-            AgentJumpHeight = 10,
-            AgentMaxSlopeAngle = 30,
+
+            Costs = {
+                Air = 0,
+            }
         }
     )
 
@@ -47,29 +79,32 @@ function class:PathTo(target: Part)
         Data.waypoints = Data.Path:GetWaypoints()
 
         Data.blockedConnection = Data.Path.Blocked:Connect(function(blockedWaypointIndex)
-            if blockedWaypointIndex >= Data.nextWaypointIndex then
+            if blockedWaypointIndex >= Data.nextWaypointIndex - 1 then
                 Data.blockedConnection:Disconnect()
+                Data.reachedConnection:Disconnect()
+                self.Character.Humanoid:MoveTo(self.Character.HumanoidRootPart.Position)
                 self:PathTo(Data.Target)
+                return
             end
         end)
 
         if not Data.reachedConnection then
             Data.reachedConnection = self.Character.Humanoid.MoveToFinished:Connect(function(reached)
                 if reached and Data.nextWaypointIndex < #Data.waypoints then
+                    local currentWaypoint = Data.waypoints[Data.nextWaypointIndex]
                     Data.nextWaypointIndex += 1
                     
                     local nextWaypoint = Data.waypoints[Data.nextWaypointIndex]
                     self.Character.Humanoid:MoveTo(nextWaypoint.Position)
                     
                     -- Check if the next waypoint requires jumping
-                    if nextWaypoint.Action == Enum.PathWaypointAction.Jump then
+                    if nextWaypoint.Action == Enum.PathWaypointAction.Jump or currentWaypoint.Action == Enum.PathWaypointAction.Jump then
                         print("Jumping!")
-                        self.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+                        self.Character.Humanoid.Jump = true
                     end
                 else
                     print("path completed")
-                    Data.reachedConnection:Disconnect()
-                    Data.blockedConnection:Disconnect()
+    
 
                     if not Data.Override then
                         print("Recalculating Path!!!!!")
@@ -111,7 +146,49 @@ function class.New(Name: string, StartPos: Vector3 , Type: string)
         waypoints = nil,
     }
 
+    -- Connections
+    self.Animations = Animations
+    self.Connections = {}
+
+    for key, id in pairs(self.Animations) do
+        self.Animations[key] = Instance.new("Animation")
+        self.Animations[key].AnimationId = id
+    end
+
+    local Humanoid: Humanoid = self.Character.Humanoid
+
+    self.Connections["animation"] = Humanoid.StateChanged:Connect(function(oldState, newState)
+        for i,v in pairs(Humanoid:GetPlayingAnimationTracks()) do
+            v:Stop()
+        end
+
+        print(newState)
+           
+        if newState == Enum.HumanoidStateType.Climbing then
+            Humanoid:LoadAnimation(self.Animations.Climbing):Play()
+        elseif newState == Enum.HumanoidStateType.Jumping then
+            Humanoid:LoadAnimation(self.Animations.Jumping):Play()
+        elseif newState == Enum.HumanoidStateType.Freefall then
+            Humanoid:LoadAnimation(self.Animations.Freefall):Play()
+        elseif newState == Enum.HumanoidStateType.Running then
+            Humanoid:LoadAnimation(self.Animations.Running):Play()
+        end
+    end)
+
+
+    self.Connections["died"] = Humanoid.Died:Connect(function()
+        self:Destroy()
+    end)
+
     return self
+end
+
+function class:Destroy()
+    print("Destroyin!")
+
+    for _, connection in pairs(self.Connections) do
+        connection:Disconnect()
+    end
 end
 
 
