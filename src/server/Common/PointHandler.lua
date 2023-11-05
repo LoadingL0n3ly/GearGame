@@ -29,6 +29,7 @@ function class.FetchData(player)
 end
 
 function class.ModifyPoints(player: Player, amount: number, IGNORE_MULT: boolean, HIDE_NOTIF: boolean, msg: string)
+    if not player then return end
     if not msg then msg = "" end
     if amount == 0 then return end
     

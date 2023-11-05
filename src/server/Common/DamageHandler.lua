@@ -56,7 +56,7 @@ function class.DamageDoneToHumanoid(Attacker: Player, Victim: Humanoid, DamageDe
     end
 
     if Attacker:FindFirstChildWhichIsA("Humanoid") then
-        Attacker = game.Players.GetPlayerFromCharacter(Attacker)
+        Attacker = game.Players:GetPlayerFromCharacter(Attacker)
     end
     -- warn(Attacker.Name .. " used tool id " .. ToolId .. " to do " .. DamageDealt .. "pts of damage to " .. Victim.Name)
 
@@ -66,13 +66,16 @@ function class.DamageDoneToHumanoid(Attacker: Player, Victim: Humanoid, DamageDe
     if Victim.Health <= 0  then 
         Victim:AddTag("Killed")
         PointHandler.ModifyPoints(Attacker, KILL_BONUS, false, false, "KILL BONUS:")
-        Attacker.leaderstats.Kills.Value += 1
+        if Attacker then Attacker.leaderstats.Kills.Value += 1 end
         local VictimName = Victim.Parent.Name
-        local msg = Attacker.Name .. " just PWNd " .. VictimName
+        local AttackerName = "NPC"
+        if Attacker then AttackerName = Attacker.Name end
+        
+        local msg = AttackerName .. " just PWNd " .. VictimName
         local GearData = GearDB.Gears[ToolId]
 
         if GearData then
-            msg = GearData.GetDeathMsg(Attacker.Name, VictimName)
+            msg = GearData.GetDeathMsg(AttackerName, VictimName)
         end
 
         MessageEvent:FireAllClients(msg, Color3.fromRGB(255, 80, 74):ToHex())
