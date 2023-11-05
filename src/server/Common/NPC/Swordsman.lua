@@ -50,6 +50,11 @@ function Swordsman:LookForTarget()
         local Character = player.Character
         if not Character then continue end
 
+        local Humanoid = Character.Humanoid
+        if not Humanoid then continue end
+
+        if Humanoid.Health <= 0 then continue end
+
         local PrimaryPart = Character.HumanoidRootPart
         if not PrimaryPart then continue end
 
