@@ -128,13 +128,18 @@ function class.New(Name: string, StartPos: Vector3 , Type: string)
     return self
 end
 
-function class:Destroy()
+function class:Destroy(instant: boolean)
     print("Destroyin!")
 
     for _, connection in pairs(self.Connections) do
         connection:Disconnect()
     end
 
+    if instant then
+        self.Character:Destroy()
+        return
+    end
+    
     task.delay(7, function()
         self.Character:Destroy()
     end)

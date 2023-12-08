@@ -8,16 +8,23 @@ setmetatable(Swordsman, NPC)
 local Players = game.Players
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Gears = ReplicatedStorage:WaitForChild("Gears")
+local NPCs = ReplicatedStorage:WaitForChild("NPCs")
+local Weapons = NPCs:WaitForChild("Weapons")
 
-local Sword = Gears:WaitForChild("LinkedSword")
+local Sword = Weapons:WaitForChild("LinkedSword")
+local HttpsService = game:GetService("HttpService")
+
+local Store = {}
 
 local DISTANCE_THRESHOLD = 20
 local ATTACK_THRESHOLD = 5
-
+local STAB_COOLDOWN = 1
 
 function Swordsman:MoveToTarget()
     if not self.EnemyTarget then self.EnemyTarget = nil self:ReturnToPilot() return end
     if not self.EnemyTarget.HumanoidRootPart then self.EnemyTarget = nil self:ReturnToPilot() return end
+
+    
 
     if self.EnemyTarget.Humanoid then
         if self.EnemyTarget.Humanoid.Health <= 0 then
@@ -39,7 +46,10 @@ function Swordsman:MoveToTarget()
     end
 
     if Distance <= ATTACK_THRESHOLD then
-        self.Sword.Trigger:Fire()
+        if tick() - self.LastStab >= STAB_COOLDOWN then
+            self.LastStab = tick()
+            self.Sword.Trigger:Fire()
+        end
     end
 
     self:PathTo(self.EnemyTarget.HumanoidRootPart)
@@ -66,6 +76,10 @@ function Swordsman:LookForTarget()
     end
 end
 
+function Swordsman:PermDestroy()
+    self.RespawnTime = nil
+    self:Destroy()
+end
 
 
 function Swordsman.New(name: string, health: number, RespawnTime: number,StartPos: Vector3)
@@ -79,6 +93,8 @@ function Swordsman.New(name: string, health: number, RespawnTime: number,StartPo
 
     self.Name = name
     self.EnemyTarget = nil
+
+    self.LastStab = tick()
 
     self.Sword = Sword:Clone()
     local Humanoid: Humanoid = self.Character.Humanoid

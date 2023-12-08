@@ -2,7 +2,7 @@ local DataHandler = {}
 --local MarketPlaceService = game:GetService("MarketplaceService")
 
 local ProfileTemplate = {
-	Points = 0,
+	Points = 100,
 	Kills = 0,
 	PermanentGears = {
 		125013769,
