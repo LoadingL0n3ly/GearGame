@@ -32,6 +32,14 @@ function class.FetchData(player, DELETE_DATA)
     return Data
 end
 
+function class.AddPermanentGear(player, ID)
+    local Data = PlayerData[player]
+    table.insert(Data, ID)
+    PlayerData[player] = Data
+
+    class.GiveGear(player, ID)
+end
+
 -- Actual Setup Stuff
 function class.CharAdded(char)
     local Player = Players:GetPlayerFromCharacter(char)
