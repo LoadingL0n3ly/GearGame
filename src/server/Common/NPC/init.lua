@@ -129,7 +129,7 @@ function class.New(Name: string, StartPos: Vector3 , Type: string)
 end
 
 function class:Destroy(instant: boolean)
-    print("Destroyin!")
+    --print("Destroyin!")
 
     for _, connection in pairs(self.Connections) do
         connection:Disconnect()

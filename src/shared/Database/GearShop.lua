@@ -15,7 +15,7 @@ class.Gears = {
         Category = "Melee",
         PurchaseCost = 200, -- IN POINTS
         PermanentPurchaseProduct = Gamepass.PermanentFlingGlove.ID, -- GAMEPASS ID
-        PermanentPurchaseProductCost = MarketPlaceService:GetProductInfo(Gamepass.PermanentFlingGlove.ID, Enum.InfoType.Asset).PriceInRobux or "error",
+        PermanentPurchaseProductCost = Gamepass.PermanentFlingGlove.Info.PriceInRobux or "error",
         GetDeathMsg = function(playerName, victimName)
             local num = math.random(1,3)
             if num == 1 then return playerName .. " just flung " .. victimName .."to death!" end
@@ -30,7 +30,7 @@ class.Gears = {
         Category = "Melee",
         PurchaseCost = 100, -- IN POINTS
         PermanentPurchaseProduct = Gamepass.PermanentFryingPan.ID,
-        PermanentPurchaseProductCost = MarketPlaceService:GetProductInfo(Gamepass.PermanentFryingPan.ID, Enum.InfoType.Asset).PriceInRobux or "error",
+        PermanentPurchaseProductCost = Gamepass.PermanentFryingPan.Info.PriceInRobux or "error",
         GetDeathMsg = function(playerName, victimName)
             local num = math.random(1,3)
             if num == 1 then return playerName .. " just gently tapped " .. victimName .."'s head!" end
@@ -152,7 +152,7 @@ class.Gears = {
         Category = "Transport",
         PurchaseCost = 60, -- IN POINTS
         PermanentPurchaseProduct = Gamepass.PermanentSpeedCoil.ID,
-        PermanentPurchaseProductCost = MarketPlaceService:GetProductInfo(Gamepass.PermanentSpeedCoil.ID, Enum.InfoType.Asset).PriceInRobux or "error",
+        PermanentPurchaseProductCost = Gamepass.PermanentSpeedCoil.Info.PriceInRobux or "error",
     },
 
     [11999247] = {
