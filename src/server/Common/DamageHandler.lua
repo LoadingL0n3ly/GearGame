@@ -112,6 +112,15 @@ function class.DamageDoneToHumanoid(Attacker: Player, Victim: Humanoid, DamageDe
                 DamagePart:Destroy()
             end)
         end)
+        
+        if not Attacker then return end
+        if not Attacker.Character then return end
+        if not Attacker.Character.Head then return end
+
+        local KillStreakUi: BillboardGui = Attacker.Character.Head:FindFirstChild("KillStreak") or ReplicatedStorage.Assets.KillStreak:Clone()
+        KillStreakUi.Parent = Attacker.Character.Head
+        KillStreakUi:SetAttribute("Streak", (KillStreakUi:GetAttribute("Streak") or 0) + 1)
+        KillStreakUi.Amt.Text = `Kill Streak: {KillStreakUi:GetAttribute("Streak")}`
     end
 end
 

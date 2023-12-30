@@ -19,6 +19,7 @@ local DeathHandler = require(Shared.DeathHandler)
 local ChatHandler = require(Common.ChatHandler)
 local MapHandler = require(Common.MapHandler)
 local KillLeaderBoardHandler = require(Common.KillLeaderBoardHandler)
+local SoftShutdown = require(Common.SoftShutdown)
 
 -- // REMOTE EVENTS
 

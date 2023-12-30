@@ -34,7 +34,6 @@ local UI = require(ReplicatedStorage.UI)
 local DeathHandler = require(Common.DeathHandler)
 local FallDamageHandler = require(Common.FallDamageHandler)
 local ChatHandler = require(Common.ChatClient)
-local SoftShutdown = require(Common.SoftShutdown)
 
 -- // SETUP
 if not game:IsLoaded() then

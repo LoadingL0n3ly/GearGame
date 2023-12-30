@@ -41,6 +41,8 @@ local function GetRandomFriend(player: Player)
 end
 
 local function GetRandomCharId()
+    if not Players:GetPlayers() then return end
+    
     local RandomPlayer: Player = Players:GetPlayers()[math.random(1, #Players:GetPlayers())]
     local RandomFriendId = GetRandomFriend(RandomPlayer)
 
