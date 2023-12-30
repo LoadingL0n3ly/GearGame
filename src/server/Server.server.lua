@@ -30,7 +30,7 @@ GamepassHandler.Setup()
 -- // SETUP
 GearHandler.Setup()
 KillLeaderBoardHandler.UpdateLeaderBoard()
-
+GamepassHandler.Setup()
 
 -- // TABLES
 local PlayerConnections = {}

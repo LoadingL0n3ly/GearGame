@@ -4,6 +4,7 @@ local DataHandler = {}
 local ProfileTemplate = {
 	Points = 100,
 	Kills = 0,
+	GamepassData = {},
 	PermanentGears = {
 		125013769,
 	}
@@ -24,6 +25,7 @@ local Shared = game.ReplicatedStorage.Shared
 local PointHandler = require(Common.PointHandler)
 local GearHandler = require(Common.GearHandler)
 local KillLeaderboardHandler = require(Common.KillLeaderBoardHandler)
+local GamepassHandler = require(Common.GamepassHandler)
 
 
 local Profiles = {}
@@ -47,6 +49,10 @@ local function InitiateStats(player, profile)
 	KillsValue.Parent = leaderstats
 
 	PointHandler.LoadData(player, Data.Points)
+
+	GamepassHandler.loadPlayerGamepasses(player, profile.Data.GamepassData)
+	task.wait(1)
+	GamepassHandler.checkForOwnedPasses(player)
 end
 
 local function PlayerAdded(player)

@@ -37,6 +37,7 @@ productFunctions[Gamepasses.PermanentFlingGlove.ID] = function(player)
 end
 
 productFunctions[Gamepasses.PermanentFryingPan.ID] = function(player)
+	print("skibidi")
 	if player then 
 		GearHandler.AddPermanentGear(player, Gamepasses.PermanentFryingPan.TooldIdID)
 		return true
@@ -56,6 +57,8 @@ end
 
 local function onPromptPurchaseFinished(player, purchasedPassID, purchaseSuccess)
 	if purchaseSuccess then
+		print(purchasedPassID)
+			print(Gamepasses.PermanentFryingPan.ID)
 		if not playerGamepassInfo[player][tostring(purchasedPassID)] or playerGamepassInfo[player][tostring(purchasedPassID)] == "NotGranted" then
 			local handler = productFunctions[purchasedPassID]
 			local success, result = pcall(handler, player)
